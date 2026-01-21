@@ -105,6 +105,14 @@
             align-items: center;
             z-index: 100;
             mix-blend-mode: difference;
+            transition: var(--transition);
+        }
+
+        header.scrolled {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            mix-blend-mode: normal;
         }
 
         .logo {
@@ -138,6 +146,34 @@
 
         nav a:hover::after {
             width: 100%;
+        }
+
+        /* --- HAMBURGER MENU --- */
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+            z-index: 101;
+        }
+
+        .hamburger span {
+            width: 25px;
+            height: 3px;
+            background: var(--color-white);
+            margin: 3px 0;
+            transition: 0.3s;
+        }
+
+        .hamburger.active span:nth-child(1) {
+            transform: rotate(-45deg) translate(-5px, 6px);
+        }
+
+        .hamburger.active span:nth-child(2) {
+            opacity: 0;
+        }
+
+        .hamburger.active span:nth-child(3) {
+            transform: rotate(45deg) translate(-5px, -6px);
         }
 
         /* --- HERO SECTION --- */
@@ -225,7 +261,7 @@
         }
 
         .marquee-content span {
-            font-size: 4rem;
+            font-size: clamp(2rem, 4vw, 4rem);
             font-weight: 900;
             text-transform: uppercase;
             margin-right: 50px;
@@ -238,28 +274,26 @@
 
         /* --- STATS SECTION --- */
         .stats-container {
-            display: flex;
-            justify-content: space-between;
-            flex-wrap: wrap;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
             margin-top: 3rem;
         }
 
         .stat-item {
             text-align: center;
             padding: 20px;
-            flex: 1;
-            min-width: 200px;
         }
 
         .stat-number {
-            font-size: clamp(3rem, 5vw, 5rem);
+            font-size: clamp(2.5rem, 5vw, 5rem);
             font-weight: 900;
             color: var(--color-red);
             margin-bottom: 10px;
         }
 
         .stat-label {
-            font-size: 1rem;
+            font-size: clamp(0.8rem, 1.5vw, 1rem);
             text-transform: uppercase;
             letter-spacing: 1px;
         }
@@ -267,7 +301,7 @@
         /* --- SERVICES SECTION --- */
         .services-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             gap: 2rem;
             margin-top: 3rem;
         }
@@ -362,9 +396,6 @@
             margin-bottom: 4rem;
             border-bottom: 1px solid rgba(255,255,255,0.1);
             padding-bottom: 2rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-end;
             transition: var(--transition);
         }
 
@@ -374,28 +405,28 @@
         }
 
         .work-title {
-            font-size: clamp(2rem, 4vw, 5rem);
+            font-size: clamp(1.8rem, 4vw, 5rem);
             font-weight: 700;
             text-transform: uppercase;
         }
 
         .work-cat {
-            font-size: 1rem;
+            font-size: clamp(0.9rem, 1.5vw, 1rem);
             color: var(--color-red);
             margin-bottom: 10px;
         }
 
         .work-description {
-            max-width: 70%;
             margin-top: 1rem;
             line-height: 1.5;
             opacity: 0.8;
         }
 
         .work-stats {
-            display: flex;
-            gap: 2rem;
-            margin-top: 1rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 1rem;
+            margin-top: 1.5rem;
         }
 
         .work-stat {
@@ -404,13 +435,13 @@
         }
 
         .work-stat-value {
-            font-size: 1.5rem;
+            font-size: clamp(1.2rem, 2vw, 1.5rem);
             font-weight: 700;
             color: var(--color-red);
         }
 
         .work-stat-label {
-            font-size: 0.8rem;
+            font-size: clamp(0.7rem, 1.2vw, 0.8rem);
             text-transform: uppercase;
             opacity: 0.7;
         }
@@ -418,7 +449,7 @@
         /* --- TESTIMONIALS --- */
         .testimonials-container {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             gap: 2rem;
             padding: 2rem 0;
         }
@@ -435,7 +466,7 @@
         }
 
         .testimonial-text {
-            font-size: 1.1rem;
+            font-size: clamp(1rem, 1.5vw, 1.1rem);
             line-height: 1.6;
             margin-bottom: 1.5rem;
             font-style: italic;
@@ -472,7 +503,7 @@
         /* --- PRICING --- */
         .pricing-container {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             gap: 2rem;
             margin-top: 3rem;
         }
@@ -521,7 +552,7 @@
         }
 
         .plan-price {
-            font-size: 3rem;
+            font-size: clamp(2.5rem, 4vw, 3rem);
             font-weight: 900;
             margin-bottom: 0.5rem;
         }
@@ -574,9 +605,9 @@
 
         /* --- ABOUT --- */
         .about-text {
-            font-size: clamp(1.5rem, 3vw, 2.5rem);
+            font-size: clamp(1.2rem, 3vw, 2.5rem);
             line-height: 1.4;
-            max-width: 80%;
+            max-width: 100%;
         }
 
         .highlight {
@@ -584,15 +615,13 @@
         }
 
         .team-container {
-            display: flex;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             gap: 2rem;
             margin-top: 3rem;
-            flex-wrap: wrap;
         }
 
         .team-member {
-            flex: 1;
-            min-width: 250px;
             text-align: center;
         }
 
@@ -635,7 +664,7 @@
         }
 
         .cta-big {
-            font-size: clamp(3rem, 8vw, 8rem);
+            font-size: clamp(2rem, 8vw, 8rem);
             font-weight: 900;
             text-transform: uppercase;
             display: block;
@@ -725,26 +754,140 @@
 
         /* --- RESPONSIVE --- */
         @media (max-width: 768px) {
-            header { padding: 20px; }
-            nav { display: none; } /* Simplificado para demo */
-            .hero h1 { font-size: 15vw; }
-            .container { width: 100%; }
-            .work-item { flex-direction: column; align-items: flex-start; }
-            .work-stats { margin-top: 1.5rem; }
-            .pricing-card.featured { transform: scale(1); }
-            .footer-info { flex-direction: column; gap: 20px; }
-            .testimonials-container { grid-template-columns: 1fr; }
+            header { 
+                padding: 20px; 
+                mix-blend-mode: normal;
+            }
+            
+            header.scrolled {
+                background: rgba(255, 255, 255, 0.95);
+                backdrop-filter: blur(10px);
+                -webkit-backdrop-filter: blur(10px);
+            }
+            
+            .logo {
+                color: var(--color-black);
+                z-index: 101;
+            }
+            
+            .hamburger {
+                display: flex;
+                z-index: 101;
+            }
+            
+            header.scrolled .hamburger span {
+                background: var(--color-black);
+            }
+            
+            nav {
+                position: fixed;
+                top: 0;
+                right: -100%;
+                width: 80%;
+                max-width: 300px;
+                height: 100vh;
+                background: var(--color-white);
+                color: var(--color-black);
+                transition: right 0.3s ease-in-out;
+                padding: 100px 30px 30px;
+                box-shadow: -5px 0 15px rgba(0,0,0,0.1);
+            }
+            
+            nav.active {
+                right: 0;
+            }
+            
+            nav ul {
+                flex-direction: column;
+                gap: 30px;
+            }
+            
+            nav a {
+                color: var(--color-black);
+                font-size: 1.1rem;
+            }
+            
+            nav a::after {
+                background-color: var(--color-black);
+            }
+            
+            .hero { 
+                align-items: center;
+                text-align: center;
+                padding: 0 20px;
+            }
+            
+            .hero h1 { 
+                font-size: 15vw; 
+                text-align: center;
+            }
+            
+            .hero-subtitle {
+                text-align: center;
+                font-size: 1rem;
+            }
+            
+            .container { 
+                width: 100%; 
+                padding: 0 20px;
+            }
+            
+            .section-title {
+                text-align: center;
+                display: block;
+                border-bottom: none;
+                padding-bottom: 0;
+                margin: 0 auto 2rem;
+            }
+            
+            .work-item { 
+                text-align: center;
+            }
+            
+            .work-stats { 
+                margin-top: 2rem;
+            }
+            
+            .pricing-card.featured { 
+                transform: scale(1); 
+            }
+            
+            .footer-info { 
+                flex-direction: column; 
+                gap: 20px; 
+                text-align: center;
+            }
+            
+            .testimonials-container { 
+                grid-template-columns: 1fr; 
+            }
+            
+            .scroll-indicator {
+                display: none;
+            }
+            
+            .cursor {
+                display: none;
+            }
+            
+            body, .service-card, .pricing-card, .testimonial-card, .work-item {
+                cursor: auto;
+            }
         }
-
     </style>
 </head>
 <body>
 
     <div class="cursor"></div>
 
-    <header>
+    <header id="header">
         <div class="logo">FLUX.</div>
-        <nav>
+        <div class="hamburger" id="hamburger">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+        <nav id="nav">
             <ul>
                 <li><a href="#services" class="hover-trigger">Servicios</a></li>
                 <li><a href="#work" class="hover-trigger">Proyectos</a></li>
@@ -1110,18 +1253,47 @@
         const cursor = document.querySelector('.cursor');
         const hoverTriggers = document.querySelectorAll('.hover-trigger');
 
-        document.addEventListener('mousemove', (e) => {
-            cursor.style.left = e.clientX + 'px';
-            cursor.style.top = e.clientY + 'px';
+        if (window.innerWidth > 768) {
+            document.addEventListener('mousemove', (e) => {
+                cursor.style.left = e.clientX + 'px';
+                cursor.style.top = e.clientY + 'px';
+            });
+
+            hoverTriggers.forEach(link => {
+                link.addEventListener('mouseenter', () => {
+                    cursor.classList.add('hovered');
+                });
+                link.addEventListener('mouseleave', () => {
+                    cursor.classList.remove('hovered');
+                });
+            });
+        }
+
+        // --- HAMBURGER MENU ---
+        const hamburger = document.getElementById('hamburger');
+        const nav = document.getElementById('nav');
+        
+        hamburger.addEventListener('click', () => {
+            hamburger.classList.toggle('active');
+            nav.classList.toggle('active');
         });
 
-        hoverTriggers.forEach(link => {
-            link.addEventListener('mouseenter', () => {
-                cursor.classList.add('hovered');
+        // Close menu when clicking on a link
+        document.querySelectorAll('nav a').forEach(link => {
+            link.addEventListener('click', () => {
+                hamburger.classList.remove('active');
+                nav.classList.remove('active');
             });
-            link.addEventListener('mouseleave', () => {
-                cursor.classList.remove('hovered');
-            });
+        });
+
+        // --- HEADER SCROLL EFFECT ---
+        window.addEventListener('scroll', () => {
+            const header = document.getElementById('header');
+            if (window.scrollY > 100) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
         });
 
         // --- SCROLL ANIMATION (Intersection Observer) ---
