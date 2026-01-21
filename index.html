@@ -1,0 +1,1187 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FLUX | Digital Marketing Agency</title>
+    <style>
+        /* --- RESET & BASE --- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            cursor: none; /* Ocultamos el cursor por defecto para usar el personalizado */
+        }
+
+        :root {
+            --color-black: #050505;
+            --color-white: #f0f0f0;
+            --color-red: #ff1a1a; /* Un rojo vibrante */
+            --font-main: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            --transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        body {
+            background-color: var(--color-black);
+            color: var(--color-white);
+            font-family: var(--font-main);
+            overflow-x: hidden;
+            line-height: 1.2;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        ul {
+            list-style: none;
+        }
+
+        /* --- CUSTOM CURSOR --- */
+        .cursor {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 20px;
+            height: 20px;
+            background: var(--color-white);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9999;
+            transform: translate(-50%, -50%);
+            mix-blend-mode: difference;
+            transition: width 0.3s, height 0.3s;
+        }
+
+        .cursor.hovered {
+            width: 50px;
+            height: 50px;
+            background: var(--color-red);
+            mix-blend-mode: normal;
+            opacity: 0.8;
+        }
+
+        /* --- TYPOGRAPHY --- */
+        h1, h2, h3 {
+            text-transform: uppercase;
+            font-weight: 700;
+            letter-spacing: -0.03em;
+        }
+
+        .display-text {
+            font-size: clamp(3rem, 10vw, 12rem);
+            line-height: 0.9;
+        }
+
+        .section-title {
+            font-size: clamp(2rem, 5vw, 4rem);
+            margin-bottom: 2rem;
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+            padding-bottom: 1rem;
+            display: inline-block;
+        }
+
+        /* --- LAYOUT UTILS --- */
+        .container {
+            width: 90%;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .section {
+            padding: 100px 0;
+        }
+
+        /* --- HEADER --- */
+        header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 30px 50px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 100;
+            mix-blend-mode: difference;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 900;
+            letter-spacing: -1px;
+        }
+
+        nav ul {
+            display: flex;
+            gap: 40px;
+        }
+
+        nav a {
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            position: relative;
+        }
+
+        nav a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 1px;
+            background-color: var(--color-white);
+            transition: var(--transition);
+        }
+
+        nav a:hover::after {
+            width: 100%;
+        }
+
+        /* --- HERO SECTION --- */
+        .hero {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: flex-start;
+            position: relative;
+        }
+
+        .hero h1 span {
+            display: block;
+            overflow: hidden;
+        }
+
+        .hero h1 span span {
+            display: block;
+            transform: translateY(100%);
+            animation: revealText 1s cubic-bezier(0.77, 0, 0.175, 1) forwards;
+        }
+
+        .hero h1 span:nth-child(1) span { animation-delay: 0.2s; }
+        .hero h1 span:nth-child(2) span { animation-delay: 0.4s; }
+        .hero h1 span:nth-child(3) span { animation-delay: 0.6s; color: var(--color-red); }
+
+        @keyframes revealText {
+            0% { transform: translateY(100%); }
+            100% { transform: translateY(0); }
+        }
+
+        .hero-subtitle {
+            font-size: 1.2rem;
+            margin-top: 2rem;
+            max-width: 600px;
+            opacity: 0.8;
+            line-height: 1.5;
+        }
+
+        .hero-cta {
+            display: inline-block;
+            margin-top: 3rem;
+            padding: 15px 40px;
+            border: 2px solid var(--color-white);
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: var(--transition);
+        }
+
+        .hero-cta:hover {
+            background-color: var(--color-white);
+            color: var(--color-black);
+        }
+
+        .scroll-indicator {
+            position: absolute;
+            bottom: 40px;
+            right: 50px;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
+            40% {transform: translateY(-10px);}
+            60% {transform: translateY(-5px);}
+        }
+
+        /* --- MARQUEE (SCROLLING TEXT) --- */
+        .marquee-container {
+            width: 100%;
+            overflow: hidden;
+            background: var(--color-red);
+            color: var(--color-black);
+            padding: 20px 0;
+            white-space: nowrap;
+        }
+
+        .marquee-content {
+            display: inline-block;
+            animation: marquee 20s linear infinite;
+        }
+
+        .marquee-content span {
+            font-size: 4rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            margin-right: 50px;
+        }
+
+        @keyframes marquee {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
+        /* --- STATS SECTION --- */
+        .stats-container {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            margin-top: 3rem;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 20px;
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .stat-number {
+            font-size: clamp(3rem, 5vw, 5rem);
+            font-weight: 900;
+            color: var(--color-red);
+            margin-bottom: 10px;
+        }
+
+        .stat-label {
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* --- SERVICES SECTION --- */
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .service-card {
+            border: 1px solid rgba(255,255,255,0.1);
+            padding: 2rem;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .service-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: var(--color-red);
+            transform: translateX(-100%);
+            transition: var(--transition);
+        }
+
+        .service-card:hover::before {
+            transform: translateX(0);
+        }
+
+        .service-card:hover {
+            background: var(--color-white);
+            color: var(--color-black);
+            transform: translateY(-10px);
+        }
+
+        .service-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .service-card p {
+            font-size: 1rem;
+            line-height: 1.5;
+            opacity: 0.7;
+            margin-bottom: 1.5rem;
+        }
+
+        .service-card:hover p {
+            opacity: 1;
+        }
+
+        .service-features {
+            list-style-type: none;
+            margin-top: 1rem;
+        }
+
+        .service-features li {
+            padding: 5px 0;
+            position: relative;
+            padding-left: 20px;
+        }
+
+        .service-features li::before {
+            content: '•';
+            position: absolute;
+            left: 0;
+            color: var(--color-red);
+        }
+
+        .service-cta {
+            display: inline-block;
+            margin-top: 1rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            position: relative;
+        }
+
+        .service-cta::after {
+            content: '→';
+            margin-left: 5px;
+            display: inline-block;
+            transition: var(--transition);
+        }
+
+        .service-card:hover .service-cta::after {
+            transform: translateX(5px);
+        }
+
+        /* --- WORK / PORTFOLIO --- */
+        .work-item {
+            position: relative;
+            margin-bottom: 4rem;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            padding-bottom: 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            transition: var(--transition);
+        }
+
+        .work-item:hover {
+            padding-left: 20px;
+            border-bottom-color: var(--color-red);
+        }
+
+        .work-title {
+            font-size: clamp(2rem, 4vw, 5rem);
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .work-cat {
+            font-size: 1rem;
+            color: var(--color-red);
+            margin-bottom: 10px;
+        }
+
+        .work-description {
+            max-width: 70%;
+            margin-top: 1rem;
+            line-height: 1.5;
+            opacity: 0.8;
+        }
+
+        .work-stats {
+            display: flex;
+            gap: 2rem;
+            margin-top: 1rem;
+        }
+
+        .work-stat {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .work-stat-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--color-red);
+        }
+
+        .work-stat-label {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            opacity: 0.7;
+        }
+
+        /* --- TESTIMONIALS --- */
+        .testimonials-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            padding: 2rem 0;
+        }
+
+        .testimonial-card {
+            border: 1px solid rgba(255,255,255,0.1);
+            padding: 2rem;
+            transition: var(--transition);
+        }
+
+        .testimonial-card:hover {
+            background: rgba(255,255,255,0.05);
+            transform: translateY(-5px);
+        }
+
+        .testimonial-text {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+            font-style: italic;
+        }
+
+        .testimonial-author {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .author-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: var(--color-red);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.2rem;
+        }
+
+        .author-info h4 {
+            font-size: 1rem;
+            margin-bottom: 5px;
+        }
+
+        .author-info p {
+            font-size: 0.9rem;
+            opacity: 0.7;
+        }
+
+        /* --- PRICING --- */
+        .pricing-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .pricing-card {
+            border: 1px solid rgba(255,255,255,0.1);
+            padding: 2rem;
+            text-align: center;
+            position: relative;
+            transition: var(--transition);
+        }
+
+        .pricing-card.featured {
+            border-color: var(--color-red);
+            transform: scale(1.05);
+        }
+
+        .pricing-card.featured::before {
+            content: 'POPULAR';
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--color-red);
+            color: var(--color-black);
+            padding: 5px 15px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+
+        .pricing-card:hover {
+            background: var(--color-white);
+            color: var(--color-black);
+            transform: translateY(-10px);
+        }
+
+        .pricing-card.featured:hover {
+            transform: scale(1.05) translateY(-10px);
+        }
+
+        .plan-name {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+        }
+
+        .plan-price {
+            font-size: 3rem;
+            font-weight: 900;
+            margin-bottom: 0.5rem;
+        }
+
+        .plan-price span {
+            font-size: 1rem;
+            font-weight: 400;
+        }
+
+        .plan-description {
+            margin-bottom: 2rem;
+            opacity: 0.8;
+        }
+
+        .plan-features {
+            list-style-type: none;
+            margin-bottom: 2rem;
+            text-align: left;
+        }
+
+        .plan-features li {
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            display: flex;
+            align-items: center;
+        }
+
+        .plan-features li::before {
+            content: '✓';
+            color: var(--color-red);
+            margin-right: 10px;
+            font-weight: 700;
+        }
+
+        .plan-cta {
+            display: block;
+            padding: 15px;
+            border: 2px solid var(--color-white);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 700;
+            transition: var(--transition);
+        }
+
+        .pricing-card:hover .plan-cta {
+            background: var(--color-red);
+            color: var(--color-white);
+            border-color: var(--color-red);
+        }
+
+        /* --- ABOUT --- */
+        .about-text {
+            font-size: clamp(1.5rem, 3vw, 2.5rem);
+            line-height: 1.4;
+            max-width: 80%;
+        }
+
+        .highlight {
+            color: var(--color-red);
+        }
+
+        .team-container {
+            display: flex;
+            gap: 2rem;
+            margin-top: 3rem;
+            flex-wrap: wrap;
+        }
+
+        .team-member {
+            flex: 1;
+            min-width: 250px;
+            text-align: center;
+        }
+
+        .member-avatar {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background: var(--color-red);
+            margin: 0 auto 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            font-weight: 700;
+        }
+
+        .member-name {
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .member-role {
+            font-size: 0.9rem;
+            opacity: 0.7;
+            margin-bottom: 1rem;
+        }
+
+        .member-bio {
+            font-size: 0.9rem;
+            line-height: 1.5;
+            opacity: 0.8;
+        }
+
+        /* --- CONTACT & FOOTER --- */
+        .footer {
+            background-color: var(--color-white);
+            color: var(--color-black);
+            padding: 80px 0 30px;
+            text-align: center;
+        }
+
+        .cta-big {
+            font-size: clamp(3rem, 8vw, 8rem);
+            font-weight: 900;
+            text-transform: uppercase;
+            display: block;
+            margin-bottom: 2rem;
+            transition: var(--transition);
+        }
+
+        .cta-big:hover {
+            color: var(--color-red);
+            letter-spacing: 5px;
+        }
+
+        .contact-form {
+            max-width: 600px;
+            margin: 3rem auto 0;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+            text-align: left;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 0.9rem;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 15px;
+            background: transparent;
+            border: 1px solid rgba(0,0,0,0.3);
+            color: var(--color-black);
+            font-family: inherit;
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--color-red);
+        }
+
+        .form-submit {
+            width: 100%;
+            padding: 15px;
+            background: var(--color-black);
+            color: var(--color-white);
+            border: none;
+            font-family: inherit;
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .form-submit:hover {
+            background: var(--color-red);
+        }
+
+        .footer-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-top: 50px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(0,0,0,0.1);
+            font-size: 0.9rem;
+        }
+
+        /* --- ANIMATIONS ON SCROLL --- */
+        .reveal-on-scroll {
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 1s ease-out;
+        }
+
+        .reveal-on-scroll.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* --- RESPONSIVE --- */
+        @media (max-width: 768px) {
+            header { padding: 20px; }
+            nav { display: none; } /* Simplificado para demo */
+            .hero h1 { font-size: 15vw; }
+            .container { width: 100%; }
+            .work-item { flex-direction: column; align-items: flex-start; }
+            .work-stats { margin-top: 1.5rem; }
+            .pricing-card.featured { transform: scale(1); }
+            .footer-info { flex-direction: column; gap: 20px; }
+            .testimonials-container { grid-template-columns: 1fr; }
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="cursor"></div>
+
+    <header>
+        <div class="logo">FLUX.</div>
+        <nav>
+            <ul>
+                <li><a href="#services" class="hover-trigger">Servicios</a></li>
+                <li><a href="#work" class="hover-trigger">Proyectos</a></li>
+                <li><a href="#testimonials" class="hover-trigger">Testimonios</a></li>
+                <li><a href="#pricing" class="hover-trigger">Planes</a></li>
+                <li><a href="#about" class="hover-trigger">Agencia</a></li>
+                <li><a href="#contact" class="hover-trigger">Contacto</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section class="hero container">
+        <h1 class="display-text">
+            <span><span>DIGITAL</span></span>
+            <span><span>MARKETING</span></span>
+            <span><span>REVOLUTION</span></span>
+        </h1>
+        <p class="hero-subtitle reveal-on-scroll">
+            Transformamos tu presencia digital con estrategias audaces y resultados medibles. 
+            De la idea a la ejecución, creamos experiencias que conectan, convierten y perduran.
+        </p>
+        <a href="#contact" class="hero-cta hover-trigger reveal-on-scroll">Iniciar Proyecto</a>
+        <div class="scroll-indicator">Scroll Down</div>
+    </section>
+
+    <div class="marquee-container">
+        <div class="marquee-content">
+            <span>Estrategia • Diseño • Desarrollo • Branding • SEO • Contenido • FLUX Agency • Estrategia • Diseño • Desarrollo •</span>
+            <span>Estrategia • Diseño • Desarrollo • Branding • SEO • Contenido • FLUX Agency • Estrategia • Diseño • Desarrollo •</span>
+        </div>
+    </div>
+
+    <section id="stats" class="section container">
+        <h2 class="section-title reveal-on-scroll">Resultados que Hablan</h2>
+        <div class="stats-container">
+            <div class="stat-item reveal-on-scroll">
+                <div class="stat-number" data-target="250">0</div>
+                <div class="stat-label">Clientes Satisfechos</div>
+            </div>
+            <div class="stat-item reveal-on-scroll">
+                <div class="stat-number" data-target="95">0</div>
+                <div class="stat-label">% de Retención</div>
+            </div>
+            <div class="stat-item reveal-on-scroll">
+                <div class="stat-number" data-target="450">0</div>
+                <div class="stat-label">Proyectos Completados</div>
+            </div>
+            <div class="stat-item reveal-on-scroll">
+                <div class="stat-number" data-target="15">0</div>
+                <div class="stat-label">Años de Experiencia</div>
+            </div>
+        </div>
+    </section>
+
+    <section id="services" class="section container">
+        <h2 class="section-title reveal-on-scroll">Nuestros Servicios</h2>
+        <div class="services-grid">
+            <div class="service-card reveal-on-scroll hover-trigger">
+                <h3>01. Branding</h3>
+                <p>Identidad visual impactante que define marcas. Logotipos, paletas de color y manuales de marca.</p>
+                <ul class="service-features">
+                    <li>Diseño de logotipos memorables</li>
+                    <li>Manuales de marca completos</li>
+                    <li>Estrategia de naming</li>
+                    <li>Posicionamiento de marca</li>
+                </ul>
+                <a href="#contact" class="service-cta">Solicitar información</a>
+            </div>
+            <div class="service-card reveal-on-scroll hover-trigger">
+                <h3>02. Desarrollo Web</h3>
+                <p>Experiencias digitales inmersivas. Webs corporativas, E-commerce y Landing Pages de alta conversión.</p>
+                <ul class="service-features">
+                    <li>Diseño responsive y adaptativo</li>
+                    <li>Optimización SEO nativa</li>
+                    <li>Integración con sistemas de pago</li>
+                    <li>Velocidad de carga optimizada</li>
+                </ul>
+                <a href="#contact" class="service-cta">Solicitar información</a>
+            </div>
+            <div class="service-card reveal-on-scroll hover-trigger">
+                <h3>03. Social Media</h3>
+                <p>Estrategias de contenido que conectan. Gestión de redes, creación de reels y community management.</p>
+                <ul class="service-features">
+                    <li>Creación de contenido viral</li>
+                    <li>Gestión de comunidad</li>
+                    <li>Estrategias de engagement</li>
+                    <li>Análisis de métricas y KPIs</li>
+                </ul>
+                <a href="#contact" class="service-cta">Solicitar información</a>
+            </div>
+            <div class="service-card reveal-on-scroll hover-trigger">
+                <h3>04. Performance</h3>
+                <p>Campañas de Paid Media (Ads) enfocadas en ROI. Google Ads, Meta Ads y Analítica avanzada.</p>
+                <ul class="service-features">
+                    <li>Campañas de pago por clic</li>
+                    <li>Segmentación avanzada</li>
+                    <li>Optimización de conversiones</li>
+                    <li>Reportes de rendimiento</li>
+                </ul>
+                <a href="#contact" class="service-cta">Solicitar información</a>
+            </div>
+            <div class="service-card reveal-on-scroll hover-trigger">
+                <h3>05. Content Marketing</h3>
+                <p>Historias que venden. Creación de contenido de valor que posiciona tu marca como referente.</p>
+                <ul class="service-features">
+                    <li>Estrategia de contenido editorial</li>
+                    <li>Creación de blog y artículos</li>
+                    <li>Producción de video y podcast</li>
+                    <li>Distribución multicanal</li>
+                </ul>
+                <a href="#contact" class="service-cta">Solicitar información</a>
+            </div>
+            <div class="service-card reveal-on-scroll hover-trigger">
+                <h3>06. SEO & Analytics</h3>
+                <p>Visibilidad orgánica y datos que guían decisiones. Optimización para motores de búsqueda y análisis profundo.</p>
+                <ul class="service-features">
+                    <li>Auditoría SEO completa</li>
+                    <li>Estrategia de palabras clave</li>
+                    <li>Link building de calidad</li>
+                    <li>Dashboard de analytics personalizado</li>
+                </ul>
+                <a href="#contact" class="service-cta">Solicitar información</a>
+            </div>
+        </div>
+    </section>
+
+    <section id="work" class="section container">
+        <h2 class="section-title reveal-on-scroll">Casos de Éxito</h2>
+        
+        <div class="work-item reveal-on-scroll hover-trigger">
+            <div>
+                <p class="work-cat">Fashion / E-commerce</p>
+                <h3 class="work-title">Neon Mode</h3>
+                <p class="work-description">Transformamos una tienda local en una marca global con estrategia omnicanal, aumentando ventas un 340% en 6 meses.</p>
+                <div class="work-stats">
+                    <div class="work-stat">
+                        <span class="work-stat-value">340%</span>
+                        <span class="work-stat-label">Aumento ventas</span>
+                    </div>
+                    <div class="work-stat">
+                        <span class="work-stat-value">2.5M</span>
+                        <span class="work-stat-label">Impresiones</span>
+                    </div>
+                    <div class="work-stat">
+                        <span class="work-stat-value">-45%</span>
+                        <span class="work-stat-label">Costo adquisición</span>
+                    </div>
+                </div>
+            </div>
+            <span>2025</span>
+        </div>
+
+        <div class="work-item reveal-on-scroll hover-trigger">
+            <div>
+                <p class="work-cat">Tech / Branding</p>
+                <h3 class="work-title">Cyber Core</h3>
+                <p class="work-description">Creamos una identidad disruptiva para esta startup de ciberseguridad, posicionándola como líder en su nicho.</p>
+                <div class="work-stats">
+                    <div class="work-stat">
+                        <span class="work-stat-value">180%</span>
+                        <span class="work-stat-label">Crecimiento tráfico</span>
+                    </div>
+                    <div class="work-stat">
+                        <span class="work-stat-value">67%</span>
+                        <span class="work-stat-label">Tasa conversión</span>
+                    </div>
+                    <div class="work-stat">
+                        <span class="work-stat-value">+500</span>
+                        <span class="work-stat-label">Clientes nuevos</span>
+                    </div>
+                </div>
+            </div>
+            <span>2024</span>
+        </div>
+
+        <div class="work-item reveal-on-scroll hover-trigger">
+            <div>
+                <p class="work-cat">Food / Social</p>
+                <h3 class="work-title">Red Burger</h3>
+                <p class="work-description">Estrategia de contenidos virales que convirtió a esta cadena de hamburguesas en fenómeno en redes sociales.</p>
+                <div class="work-stats">
+                    <div class="work-stat">
+                        <span class="work-stat-value">3.2M</span>
+                        <span class="work-stat-label">Views en reels</span>
+                    </div>
+                    <div class="work-stat">
+                        <span class="work-stat-value">120%</span>
+                        <span class="work-stat-label">Aumento seguidores</span>
+                    </div>
+                    <div class="work-stat">
+                        <span class="work-stat-value">85%</span>
+                        <span class="work-stat-label">Engagement rate</span>
+                    </div>
+                </div>
+            </div>
+            <span>2025</span>
+        </div>
+    </section>
+
+    <section id="testimonials" class="section container">
+        <h2 class="section-title reveal-on-scroll">Lo que Dicen Nuestros Clientes</h2>
+        <div class="testimonials-container">
+            <div class="testimonial-card reveal-on-scroll">
+                <p class="testimonial-text">"Trabajar con FLUX transformó completamente nuestro negocio. No solo aumentaron nuestras ventas, sino que redefinieron nuestra presencia digital. El equipo es creativo, profesional y está siempre un paso adelante."</p>
+                <div class="testimonial-author">
+                    <div class="author-avatar">MG</div>
+                    <div class="author-info">
+                        <h4>María García</h4>
+                        <p>CEO, Neon Mode</p>
+                    </div>
+                </div>
+            </div>
+            <div class="testimonial-card reveal-on-scroll">
+                <p class="testimonial-text">"La estrategia de contenido que desarrollaron para nosotros posicionó nuestra marca como referente en el sector. El ROI ha sido excepcional y el proceso, increíblemente colaborativo."</p>
+                <div class="testimonial-author">
+                    <div class="author-avatar">JR</div>
+                    <div class="author-info">
+                        <h4>Juan Rodríguez</h4>
+                        <p>Fundador, Cyber Core</p>
+                    </div>
+                </div>
+            </div>
+            <div class="testimonial-card reveal-on-scroll">
+                <p class="testimonial-text">"Necesitábamos una campaña que resuene con el público joven y FLUX lo logró. Nuestros productos se agotaron tras el lanzamiento y nuestra comunidad creció exponencialmente."</p>
+                <div class="testimonial-author">
+                    <div class="author-avatar">AL</div>
+                    <div class="author-info">
+                        <h4>Ana López</h4>
+                        <p>Directora de Marketing, Red Burger</p>
+                    </div>
+                </div>
+            </div>
+            <div class="testimonial-card reveal-on-scroll">
+                <p class="testimonial-text">"El equipo de FLUX entendió nuestra visión desde el primer día. La nueva identidad visual que crearon captura perfectamente nuestra esencia y ha sido clave para nuestra expansión internacional."</p>
+                <div class="testimonial-author">
+                    <div class="author-avatar">CM</div>
+                    <div class="author-info">
+                        <h4>Carlos Martínez</h4>
+                        <p>Director Creativo, Urban Style</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="pricing" class="section container">
+        <h2 class="section-title reveal-on-scroll">Planes Adaptados a Ti</h2>
+        <div class="pricing-container">
+            <div class="pricing-card reveal-on-scroll">
+                <h3 class="plan-name">START</h3>
+                <div class="plan-price">S/. 500<span>/mes</span></div>
+                <p class="plan-description">Para startups y emprendedores que buscan impacto inicial</p>
+                <ul class="plan-features">
+                    <li>Branding básico</li>
+                    <li>Diseño web (5 páginas)</li>
+                    <li>Gestión de 2 redes sociales</li>
+                    <li>Reporte mensual</li>
+                    <li>Soporte por email</li>
+                </ul>
+                <a href="#contact" class="plan-cta">Elegir Plan</a>
+            </div>
+            <div class="pricing-card featured reveal-on-scroll">
+                <h3 class="plan-name">GROWTH</h3>
+                <div class="plan-price">S/. 700<span>/mes</span></div>
+                <p class="plan-description">Para empresas en expansión que necesitan resultados medibles</p>
+                <ul class="plan-features">
+                    <li>Branding completo</li>
+                    <li>Diseño web avanzado (15 páginas)</li>
+                    <li>Gestión de 4 redes sociales</li>
+                    <li>Campañas de ads (presupuesto excluido)</li>
+                    <li>SEO básico</li>
+                    <li>Reporte quincenal</li>
+                    <li>Soporte prioritario</li>
+                </ul>
+                <a href="#contact" class="plan-cta">Elegir Plan</a>
+            </div>
+            <div class="pricing-card reveal-on-scroll">
+                <h3 class="plan-name">SCALE</h3>
+                <div class="plan-price">S/. 900<span>/mes</span></div>
+                <p class="plan-description">Para marcas establecidas que buscan dominar su mercado</p>
+                <ul class="plan-features">
+                    <li>Estrategia de marca integral</li>
+                    <li>Diseño web premium (ilimitado)</li>
+                    <li>Gestión de todas las redes sociales</li>
+                    <li>Campañas de ads optimizadas</li>
+                    <li>SEO avanzado y local</li>
+                    <li>Marketing de contenidos</li>
+                    <li>Analítica avanzada</li>
+                    <li>Soporte 24/7</li>
+                </ul>
+                <a href="#contact" class="plan-cta">Elegir Plan</a>
+            </div>
+        </div>
+    </section>
+
+    <section id="about" class="section container">
+        <div class="reveal-on-scroll">
+            <h2 class="section-title">La Agencia</h2>
+            <p class="about-text">
+                En <span class="highlight">FLUX</span>, no seguimos tendencias, las creamos. Somos un equipo multidisciplinario obsesionado con el detalle, la estética brutalista y los resultados medibles. Transformamos el ruido digital en <span class="highlight">señal clara</span>.
+            </p>
+            <div class="team-container">
+                <div class="team-member reveal-on-scroll">
+                    <div class="member-avatar">AM</div>
+                    <h4 class="member-name">Ana Morales</h4>
+                    <p class="member-role">Directora Creativa</p>
+                    <p class="member-bio">Con más de 10 años de experiencia en branding, Ana lidera nuestro equipo creativo con una visión única y audaz.</p>
+                </div>
+                <div class="team-member reveal-on-scroll">
+                    <div class="member-avatar">DR</div>
+                    <h4 class="member-name">David Ramos</h4>
+                    <p class="member-role">Estratega Digital</p>
+                    <p class="member-bio">Especialista en growth hacking y analítica, David transforma datos en estrategias que impulsan resultados excepcionales.</p>
+                </div>
+                <div class="team-member reveal-on-scroll">
+                    <div class="member-avatar">LS</div>
+                    <h4 class="member-name">Laura Sánchez</h4>
+                    <p class="member-role">Directora de Cuentas</p>
+                    <p class="member-bio">Con una pasión por las relaciones cliente-agencia, Laura asegura que cada proyecto supere las expectativas.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer id="contact" class="footer">
+        <div class="container">
+            <p style="margin-bottom: 20px; font-size: 1.2rem; text-transform: uppercase;">¿Listo para escalar?</p>
+            <a href="mailto:hola@flux.com" class="cta-big hover-trigger">HABLEMOS</a>
+            
+            <form class="contact-form reveal-on-scroll">
+                <div class="form-group">
+                    <label for="name">Nombre</label>
+                    <input type="text" id="name" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="company">Empresa</label>
+                    <input type="text" id="company" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label for="message">Mensaje</label>
+                    <textarea id="message" class="form-control" rows="5" required></textarea>
+                </div>
+                <button type="submit" class="form-submit">ENVIAR</button>
+            </form>
+            
+            <div class="footer-info">
+                <div>
+                    &copy; 2026 FLUX Digital Agency.<br>Todos los derechos reservados.
+                </div>
+                <div>
+                    Instagram / LinkedIn / Behance
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // --- CUSTOM CURSOR LOGIC ---
+        const cursor = document.querySelector('.cursor');
+        const hoverTriggers = document.querySelectorAll('.hover-trigger');
+
+        document.addEventListener('mousemove', (e) => {
+            cursor.style.left = e.clientX + 'px';
+            cursor.style.top = e.clientY + 'px';
+        });
+
+        hoverTriggers.forEach(link => {
+            link.addEventListener('mouseenter', () => {
+                cursor.classList.add('hovered');
+            });
+            link.addEventListener('mouseleave', () => {
+                cursor.classList.remove('hovered');
+            });
+        });
+
+        // --- SCROLL ANIMATION (Intersection Observer) ---
+        const observerOptions = {
+            threshold: 0.1
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    
+                    // Animar números de estadísticas
+                    if (entry.target.classList.contains('stat-item')) {
+                        const counter = entry.target.querySelector('.stat-number');
+                        const target = +counter.getAttribute('data-target');
+                        let count = 0;
+                        const increment = target / 100;
+                        
+                        const updateCount = () => {
+                            if (count < target) {
+                                count += increment;
+                                counter.innerText = Math.ceil(count);
+                                setTimeout(updateCount, 10);
+                            } else {
+                                counter.innerText = target;
+                            }
+                        };
+                        
+                        updateCount();
+                    }
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.reveal-on-scroll').forEach(el => {
+            observer.observe(el);
+        });
+
+        // --- FORM SUBMISSION ---
+        document.querySelector('.contact-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            // Aquí iría la lógica para enviar el formulario
+            alert('Gracias por contactarnos. Te responderemos a la brevedad.');
+            this.reset();
+        });
+
+        // --- SMOOTH SCROLL ---
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
